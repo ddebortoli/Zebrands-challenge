@@ -1,0 +1,7 @@
+version: "3.3"
+services:
+  app:
+    build: app
+    restart: always
+    ports: 
+      - "8005:8005" # List Open ports with process name and pid sudo lsof -i -P -n | grep LISTEN
