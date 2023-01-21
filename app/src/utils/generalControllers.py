@@ -11,3 +11,28 @@ def fixDataFromDataBase(data):
         data = json.dumps(data, indent=4, sort_keys=True, default=str)
         data = json.loads(data)
         return data
+
+def checkMandatoryArr(array,parameters):
+    """
+    Check mandatory parameter
+    where array is the array object, and parameters is a LIST of the mandatory parameters
+    Also can use this function to check type, but it needs some changes
+    """
+    for arr in array:
+        for parameter in parameters:
+            try:
+                i = arr[parameter]
+            except KeyError:
+                return False
+    return True
+
+def checkMandatory(body,parameters):
+    """Check mandatory parameter
+    where array is the object, and parameters is a LIST of the mandatory parameters
+    Also can use this function to check type, but it needs some changes"""
+    for parameter in parameters:
+        try:
+            i = body[parameter]
+        except KeyError:
+            return False
+    return True

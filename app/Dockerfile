@@ -18,4 +18,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 80
 COPY ./src ./src
 # COPY ./db.config.json ./
-CMD ["sh", "-c", "gunicorn -b 0.0.0.0:8005 --workers=3 --timeout 500 --chdir /usr/src/app/src run:app --disable-redirect-access-to-syslog"]
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:8006 --workers=3 --timeout 500 --chdir /usr/src/app/src run:app --disable-redirect-access-to-syslog"]

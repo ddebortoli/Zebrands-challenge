@@ -1,78 +1,65 @@
-### Mapa Componentes de Integraciones
+# Zebrands challenge
 
-Mapa para ver componentes ambos lados, endpoints, metodos, parametros, y todo lo que se necesita testear para
-que cada flujo corra correctamente
-
-https://github.com/Cambalache-Technologies/salesforce-grupocn
-https://documenter.getpostman.com/view/15481845/UzBnrmxK
-https://lucid.app/lucidchart/2aa0f546-7997-4804-9391-f40b76a96089/edit?invitationId=inv_1b717bc1-7fa4-482d-b41d-bdeae60a3623&page=LZlAiNnI9LEk#?referringapp=slack
-EC2             - t2.medium
-ElasticIP       - 52.204.203.34
-Connected App   - integracion_v4
-Docker-Compose/Dockerfile/Flask/Multiprocess(Async)
+API de productos, la cual maneja una base de datos sencilla compuesta por dos tablas:
+products (sku,name,price,brand,amount)
+users (idusers,name,password,mail)
 
 
+## Description
 
-Flujo                       SF                  Cambalapi                           CN
---------------------------------------------------------------------------------------------------------------------------------------
-GET Auxiliares                                  Cronjobs                           (Vistas Varias)
-GET Accounts                                   POST/account <-                     Vista Accounts  (Vusr_ClientesCompleto)      
-GET Dir Entrega                                POST/account <-                     Vista Dir Entr  (Vusr_DirEntregaCompleto)
-GET Contactos                                  POST/account <-                     Vista Contacts  (Vusr_ContactosCompleto)
-GET Productos                                  POST/product <-                     Vista Products  (Vusr_ProductosCompleto)
-GET Precios                                    POST/product <-                     Vista Products  (Vusr_ProductosCompleto)
-GET Stock                   Button-Apex     -> GET/consultas-product ?resource     SP Stock        (USP_CNAPP_ConsultaStock)
-GET Analisis                Button-Apex     -> GET/consultas-cliente ?resource     SP Analisis     (usr_CNAPP_ClientesRiesgo)
-GET Acopios                 Button-Apex     -> GET/consultas-cliente ?resource     SP Acopios      (usr_CNAPP_AcopioPendPorCliente)
-GET LimiteCredito           Button-Apex     -> GET/consultas-cliente ?resource     SP LimiteCre    (usr_CNAPP_LimiteCredNV)
-POST Account                Button-Apex     -> POST/account-cn                     SP Account      (usp_CNAPP_InsertaCliente)
-POST Dir Entrega            Button-Apex*    -> POST/account-cn                     SP Dir Entr     (usp_CNAPP_InsertaDirEntrega)
-POST Contact                Button-Apex*    -> POST/account-cn                     SP Contact      (usp_CNAPP_InsertaContacto)
+La api se compone de 4 endpoints del lado de productos:
+Dato importante: Usuarios autenticados son administradores
 
+GET /Product
+Devuelve de 0 a N productos, filtrando por id(array)
+Las llamadas por parte de usuarios no autenticados se registran con datadog para poder ser usados en reportes
+POST /Product
+Crea 0 a N productos - Requiere estar autenticado
+PUT /Product 
+Actualiza 0 a N productos - Requiere estar autenticado - Envia un correo a todos los administradores(Deben estar previamente verificados en AWS SES)
+DELETE /Product
+Borra de 0 a N productos - Requiere estar autenticado
 
+GET /admin
+Obtiene todos los administradores (usuario y mail) - Requiere estar autenticado
 
+POST /admin
+Crea un administrador por llamada - Requiere estar autenticado
+PUT /admin
+Acutaliza de 0 a N administradores (usuario y mail) - Requiere estar autenticado
+DELETE /admin
+Borra de 0 a N administradores (usuario y mail) - Requiere estar autenticado
 
-### External Codes Formating and Important Fields (Important! in 'database' use the format from databaseDependent method)
+Es importante mencionar que todas las llamadas de CUD realizan transacciones en la base de datos, por lo cual la falla de una, cancela toda la operacion
+El servicio devuelve un mensaje explicando el error
 
-In {database} the value saved is the picklistvalue
-Codigo__c - All SF Objects will have a value from picklist in the field (ALL)
-Codigo_Interno__c - If the record has a identifier code IN the database, the pure value is saved in this field (Ej. accountCode)
+## Getting Started
 
- - Account Parent / Child   -> {region}-{account}
- - Direccion Entrega        -> DE-{region}-{accountCode}-{direccionCode}  !!! Importante Codigo Unico DE (Actualmente uso Name)
- - Contactos                -> CO-{region}-{accountCode}-{contactoCode}-{nombre}  !!! Importante Codigo Unico CO (Actualmente uso Name)
- - Product                  -> PR-{region}-{productCode}
- - PricebookEntry STD       -> PE-{region}-{productCode}-STD
- - PricebookEntry DB        -> PE-{region}-{productCode}
- - Stock                    -> ST-{databasregione}-{productCode}-{deposito}
- - Analisis de Riesgo       -> AR-{region}-{accountCode}
- - Acopios                  -> AC-{databregionase}-{accountCode}-{productType}-{productCode}
- - Limite de riesgo         -> LI-{region}-{CuentaCliente}
+### Dependencies
 
+* Docker, AWS SES, Datadog
+* Requirements.txt
 
+### Executing program
 
-### Consultas Tecnicas Facundo
- - Los SP de creacion de cuentas / direcciones / contactos, pueden manejar batches o solo unicos registros
- - Los SP de creacion [idem arriba], se supone que tienen que devolver una respuesta? como validamos la creacion
- - Acopios - Fecha de consumo de acopios
- - Acopios - Formato External Id, (Que campos tomo en cuenta)
- - SP Limites de credito, por que usamos un parametro basado en la nota de venta?
- - Campos para formar externa ID en Contactos / Direccion Entrega (Ahora uso Name)
+* Docker-compose build 
+* Docker-compose up
 
+## Help
 
-### Pendientes
- - Configure cron for linux environ (auxs)
+Cualquier inconveniente
+mail:damiandebortolilb@gmail.com
+LinkedIn: https://www.linkedin.com/in/damian-debortoli/
+## Authors
+
+https://www.linkedin.com/in/damian-debortoli/
 
 
-### RecordTypes 
-Account        
-Pricebook2              
+## Acknowledgments
 
-
-### Desarrollo Componentes
-Calculo Potencial (Migrado)
- - Apex Class   calcularPotencial
- - Apex Class   calcularPotencial_test
- - LWC          calcularPotencial
-
-### Nomenclatura
+Inspiration, code snippets, etc.
+* [awesome-readme](https://github.com/matiassingers/awesome-readme)
+* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
+* [dbader](https://github.com/dbader/readme-template)
+* [zenorocha](https://gist.github.com/zenorocha/4526327)
+* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
