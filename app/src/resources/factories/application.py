@@ -1,6 +1,6 @@
 from flask              import Flask, Blueprint
 from flask_restful      import Api
-
+import os
 ### Controladores Produccion
 from resources.controllers.prod.Hello   import Hello
 from resources.controllers.prod.productos.productos   import Productos
@@ -22,7 +22,7 @@ def create_app():
         api.add_resource(Admin,     Admin.route)
         
         #app.config['CELERY_BROKER_URL'] = 'amqp://admin:cambalache@rabbitmq_3:5672'
-        app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379'
+        app.config['CELERY_BROKER_URL'] = os.environ.get('redis')
         app.register_blueprint(api_bp, url_prefix='/api')
         app.register_blueprint(test_bp, url_prefix='/test')
         

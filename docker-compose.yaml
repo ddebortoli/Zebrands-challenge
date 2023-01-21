@@ -7,13 +7,14 @@ services:
       - "8006:8006" # List Open ports with process name and pid sudo lsof -i -P -n | grep LISTEN
     environment: 
       ### Salesforce
-      aws_acces_key_id: AKIA2X3DDHUO5D7PK635
-      aws_secret_access_key: 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
-      region_name: us-east-1
-      sourceEmail: damiandebortolilb@gmail.com
-      datadog_api_key: dd4a5a1a0a87a93f45ca2e0e8df7a785
-      datadog_app_key: 0bb0b52b21c89edf2dbd823805107fed3939a5a8
-      aws_database_host: sqlserver.cednxsqskh9k.us-east-1.rds.amazonaws.com
-      aws_database_user: ddebortoli
-      aws_database_pass: OZN0kahYCzlxPet
-      aws_db: Zebrands
+      aws_acces_key_id: 
+      aws_secret_access_key: 
+      region_name: 
+      sourceEmail: 
+      datadog_api_key: 
+      datadog_app_key: 
+      aws_database_host: 
+      aws_database_user: 
+      aws_database_pass: 
+      aws_db: 
+      redis:
